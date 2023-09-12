@@ -26,15 +26,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool bIsHiding = false;
 private:
 
 	//Variable
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Cam;
 	FHitResult HideSpotHit;
-
+	bool bIsHiding = false;
 	bool bCanHide = false;
 
 //	UPROPERTY(EditAnywhere, Category = "sound")
