@@ -26,6 +26,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsHiding = false;
+
 	void TakeDamage();
 
 private:
@@ -39,8 +42,7 @@ private:
 
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	FVector HideSpotLocation;
-	
-	bool bIsHiding = false;
+
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bCanHide = false;
 
