@@ -28,15 +28,31 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHiding = false;
+
+	void TakeDamage();
+
 private:
 
 	//Variable
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Cam;
+
+	
 	FHitResult HideSpotHit;
 
+	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
+	FVector HideSpotLocation;
+
+	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bCanHide = false;
 
+	UPROPERTY(EditAnywhere)
+	USoundBase* NearLockerSound;
+	UPROPERTY(EditAnywhere)
+	USoundBase* EnteringHideSound;
+	UPROPERTY(EditAnywhere)
+	USoundBase* ExitingHideSound;
+	
 //	UPROPERTY(EditAnywhere, Category = "sound")
 //	class USoundBase* HideSound;
 
