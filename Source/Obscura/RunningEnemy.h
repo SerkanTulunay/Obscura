@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MyCharacter.generated.h"
+#include "RunningEnemy.generated.h"
 
 UCLASS()
-class OBSCURA_API AMyCharacter : public ACharacter
+class OBSCURA_API ARunningEnemy : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	AMyCharacter();
+	ARunningEnemy();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,30 +27,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool bIsHiding = false;
-private:
-
-	//Variable
-	UPROPERTY(EditAnywhere)
-	class UCameraComponent* Cam;
-	FHitResult HideSpotHit;
-
-	bool bCanHide = false;
-
-//	UPROPERTY(EditAnywhere, Category = "sound")
-//	class USoundBase* HideSound;
-
-//	UPROPERTY(EditAnywhere, Category = "sound")
-	//class USoundBase* UnHideSound;
-	
-	//Functions
-	void ToggleHide();
-	bool ScanHidePlace();
-	void Run();
-	void MoveHorizontal(float Axis);
-	void MoveVertical(float Axis);
-	void CameraYaw(float Axis);
-
-private:
+	AActor* Target;
 
 };
