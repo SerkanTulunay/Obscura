@@ -4,8 +4,10 @@
 #include "MyCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
+#include "Sound/SoundCue.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -30,7 +32,6 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 	bIsHiding = false;
 	
-	
 }
 
 // Called every frame
@@ -38,7 +39,6 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	ScanHidePlace();
-	
 }
 
 // Called to bind functionality to input
@@ -59,7 +59,8 @@ void AMyCharacter::ToggleHide()
 	{
 		UE_LOG(LogTemp,Warning,TEXT("HIDING"));
 		bIsHiding = true;
-		//UGameplayStatics::PlaySoundAtLocation(this,HideSound , this->GetActorLocation());
+
+		UGameplayStatics::PlaySoundAtLocation(HideSpotHit.GetActor(), EnteringHideSound, HideSpotHit.GetActor()->GetActorLocation());
 			//Make sound to go into locker
 	}
 	}
@@ -69,8 +70,7 @@ void AMyCharacter::ToggleHide()
 		{
 			UE_LOG(LogTemp,Warning,TEXT("HIDING"));
 			bIsHiding = true;
-			//UGameplayStatics::PlaySoundAtLocation(this,HideSound , this->GetActorLocation());
-			//Make sound to go into locker
+			UGameplayStatics::PlaySoundAtLocation(HideSpotHit.GetActor(), ExitingHideSound, HideSpotHit.GetActor()->GetActorLocation());
 		}
 	UE_LOG(LogTemp,Warning,TEXT("UnHIDING"));
 
@@ -84,21 +84,20 @@ void AMyCharacter::ToggleHide()
 bool AMyCharacter::ScanHidePlace()
 {
 	const float Radius = 200.f;
-	bool bHit;
 
 	ECollisionChannel TraceChanel=ECC_Pawn;	
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
 
-	bHit = GetWorld()->SweepSingleByChannel(HideSpotHit, this->GetActorLocation(), this->GetActorLocation(), FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(Radius), TraceParams);
+	bCanHide = GetWorld()->SweepSingleByChannel(HideSpotHit, this->GetActorLocation(), this->GetActorLocation(), FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(Radius), TraceParams);
 
-	if(bHit)
+	if(bCanHide)
 	{
 		UE_LOG(LogTemp,Warning,TEXT("%s"),*HideSpotHit.GetComponent()->GetName());
-		
+		HideSpotLocation = HideSpotHit.GetActor()->GetActorLocation();
 		//make sound and set hidable true
 	}
-	return bHit;
+	return bCanHide;
 }
 
 void AMyCharacter::Run()
