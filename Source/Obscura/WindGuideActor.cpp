@@ -35,7 +35,7 @@ void AWindGuideActor::BeginPlay()
 void AWindGuideActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if(!AudioComp->IsPlaying())
+	if(!AudioComp->IsPlaying() && SplineCount != SplineComp->GetNumberOfSplinePoints())
 	{
 		AudioComp->Play();
 	}
@@ -48,7 +48,14 @@ void AWindGuideActor::ChangeAudioLocation()
 
 	if(SplineCount == SplineComp->GetNumberOfSplinePoints())
 	{
-		return;
+		if(((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length() < 200))
+		{
+			AudioComp->Stop();
+		}
+		else
+		{
+			return;
+		}
 	}
 	else
 	{
