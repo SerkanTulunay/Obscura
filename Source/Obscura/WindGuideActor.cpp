@@ -35,7 +35,7 @@ void AWindGuideActor::BeginPlay()
 void AWindGuideActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if(!AudioComp->IsPlaying())
+	if(!AudioComp->IsPlaying() && SplineCount != SplineComp->GetNumberOfSplinePoints())
 	{
 		AudioComp->Play();
 	}
@@ -48,12 +48,19 @@ void AWindGuideActor::ChangeAudioLocation()
 
 	if(SplineCount == SplineComp->GetNumberOfSplinePoints())
 	{
-		return;
+		if(((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length() < 100))
+		{
+			AudioComp->Stop();
+		}
+		else
+		{
+			return;
+		}
 	}
 	else
 	{
 		UE_LOG(LogTemp,Warning,TEXT("%f"),(UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length());
-		if((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length() < 200)
+		if((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length() < 100)
 		{
 			UE_LOG(LogTemp,Warning,TEXT("MOVED TO %i" ),SplineCount);
 			SplineCount++;

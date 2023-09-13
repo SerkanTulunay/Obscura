@@ -61,6 +61,7 @@ void AMyCharacter::ToggleHide()
 		bIsHiding = true;
 
 		UGameplayStatics::PlaySoundAtLocation(HideSpotHit.GetActor(), EnteringHideSound, HideSpotHit.GetActor()->GetActorLocation());
+		SetActorRotation(HideSpotHit.GetActor()->GetActorForwardVector().Rotation());
 			//Make sound to go into locker
 	}
 	}
