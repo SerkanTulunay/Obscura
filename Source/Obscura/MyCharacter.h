@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Math/UnrealMathUtility.h"
+#include "Misc/App.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -19,7 +21,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -29,7 +31,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHiding = false;
 
-	void TakeDamage();
+	//void TakeDamage();
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	int ControllerIndex;
 
 private:
 
@@ -37,6 +41,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Cam;
 
+	FRotator TargetRotation;
 	
 	FHitResult HideSpotHit;
 
@@ -45,6 +50,8 @@ private:
 
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	bool bCanHide = false;
+
+	bool bIsMoving = false;
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* NearLockerSound;
@@ -60,11 +67,15 @@ private:
 	//class USoundBase* UnHideSound;
 	
 	//Functions
+	UFUNCTION(BlueprintCallable)
 	void ToggleHide();
 	bool ScanHidePlace();
 	void Run();
+	UFUNCTION(BlueprintCallable)
 	void MoveHorizontal(float Axis);
+	UFUNCTION(BlueprintCallable)
 	void MoveVertical(float Axis);
+	UFUNCTION(BlueprintCallable)
 	void CameraYaw(float Axis);
 
 private:

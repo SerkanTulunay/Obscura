@@ -29,6 +29,7 @@ AMyCharacter::AMyCharacter()
 // Called when the game starts or when spawned
 void AMyCharacter::BeginPlay()
 {
+	TargetRotation = GetActorRotation();
 	Super::BeginPlay();
 	bIsHiding = false;
 	
@@ -39,15 +40,18 @@ void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	ScanHidePlace();
+	SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(), TargetRotation, DeltaTime, 500.f ));
+	if(GetActorRotation() == TargetRotation)
+		bIsMoving = false;
 }
 
 // Called to bind functionality to input
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
-	PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
-	PlayerInputComponent->BindAxis("MouseYaw",this,&AMyCharacter::CameraYaw);
+	//PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
+	//PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
+	//PlayerInputComponent->BindAxis("MouseYaw",this,&AMyCharacter::CameraYaw);
 	PlayerInputComponent->BindAction("Hide",IE_Pressed,this,&AMyCharacter::ToggleHide);
 }
 
@@ -94,7 +98,7 @@ bool AMyCharacter::ScanHidePlace()
 
 	if(bCanHide)
 	{
-		UE_LOG(LogTemp,Warning,TEXT("%s"),*HideSpotHit.GetComponent()->GetName());
+		//UE_LOG(LogTemp,Warning,TEXT("%s"),*HideSpotHit.GetComponent()->GetName());
 		HideSpotLocation = HideSpotHit.GetActor()->GetActorLocation();
 		//make sound and set hidable true
 	}
@@ -107,19 +111,49 @@ void AMyCharacter::Run()
 
 void AMyCharacter::MoveHorizontal(float Axis)
 {
-	if(!bIsHiding)
-	AddMovementInput(GetActorRightVector(),Axis);
+	const float Radius = 1.f;
+
+	ECollisionChannel TraceChanel=ECC_Pawn;	
+	FCollisionQueryParams TraceParams;
+	TraceParams.AddIgnoredActor(this);
+	FHitResult hit;
+	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorRightVector()*Axis*100, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+	if(!bIsHiding && !MovementBlocked)
+		SetActorLocation(GetActorLocation()+GetActorRightVector()*Axis*100);
+	if(MovementBlocked)
+	{
+		//PlayBlockedSound
+	}
+
 }
 
 void AMyCharacter::MoveVertical(float Axis)
 {
-	if(!bIsHiding)
-	AddMovementInput(GetActorForwardVector(),Axis);
+	const float Radius = 1.f;
+
+	ECollisionChannel TraceChanel=ECC_Pawn;	
+	FCollisionQueryParams TraceParams;
+	TraceParams.AddIgnoredActor(this);
+	FHitResult hit;
+	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorForwardVector()*Axis*100, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+	if(!bIsHiding && !MovementBlocked && !bIsMoving)
+		SetActorLocation(GetActorLocation()+GetActorForwardVector()*Axis*100);
+	if(MovementBlocked)
+	{
+		//PlayBlockedSound
+	}
+
 }
 
 void AMyCharacter::CameraYaw(float Axis)
 {
-	if(!bIsHiding)
-	AddActorLocalRotation(FRotator(0,Axis,0));
+	if(!bIsHiding && !bIsMoving)
+	{
+		TargetRotation = TargetRotation + FRotator(0,90*Axis,0);
+		bIsMoving = true;
+	}
+	//SetActorRotation(GetActorRotation() + FRotator(0,90*Axis,0));
+	//PlayRotationSound
+	//SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(), GetActorRotation() + FRotator(0,90*Axis,0), FApp::GetDeltaTime(), 0.3f ));
 }
 
