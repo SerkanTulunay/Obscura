@@ -28,14 +28,19 @@ private:
 	UPROPERTY(VisibleAnywhere,Category="Spline",meta=(AllowPrivateAccess))
 	class USplineComponent* SplineComp;
 
+	FVector PlayerLocation;
+
+	UPROPERTY(VisibleAnywhere,Category="Spline",meta=(AllowPrivateAccess))
+	float SplineSpeed = 10;
+
 	UPROPERTY(VisibleAnywhere,Category="Audio",meta=(AllowPrivateAccess))
 	UStaticMeshComponent* AudioCarrier;
 
 	UPROPERTY(VisibleAnywhere,Category="Audio",meta=(AllowPrivateAccess))
 	UAudioComponent* AudioComp;
-	
+
 	UPROPERTY(EditAnywhere)
-	APawn* PlayerCharacter;
+	float TotalDistance = 50;
 	int SplineCount = 0;
 
 	//Functions

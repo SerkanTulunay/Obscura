@@ -2,11 +2,11 @@
 
 
 #include "WindGuideActor.h"
-
 #include "Components/AudioComponent.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AWindGuideActor::AWindGuideActor()
@@ -21,6 +21,7 @@ AWindGuideActor::AWindGuideActor()
 	if(SplineComp && AudioComp)
 	{
 		SetRootComponent(SplineComp);
+		AudioComp->SetupAttachment(AudioCarrier);
 	}
 }
 
@@ -34,19 +35,34 @@ void AWindGuideActor::BeginPlay()
 // Called every frame
 void AWindGuideActor::Tick(float DeltaTime)
 {
+	PlayerLocation = UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation();
 	Super::Tick(DeltaTime);
 	if(!AudioComp->IsPlaying() && SplineCount != SplineComp->GetNumberOfSplinePoints())
 	{
 		AudioComp->Play();
 	}
 
-	ChangeAudioLocation();
+	//ChangeAudioLocation();
+	//AudioCarrier->SetWorldLocation(SplineComp->GetLocationAtDistanceAlongSpline(SplineComp->GetDistanceAlongSplineAtSplineInputKey(SplineComp->FindInputKeyClosestToWorldLocation(PlayerLocation)),ESplineCoordinateSpace::World));
+	//UE_LOG(LogTemp,Warning,TEXT("%f,%f"),AudioCarrier->GetComponentLocation().X,AudioCarrier->GetComponentLocation().Y);
 }
 
 void AWindGuideActor::ChangeAudioLocation()
 {
+	const float SplineLenght = SplineComp->GetSplineLength();
+	UE_LOG(LogTemp,Warning,TEXT("%f, %f"), AudioComp->GetRelativeLocation().X, AudioComp->GetRelativeLocation().Y);
 
-	if(SplineCount == SplineComp->GetNumberOfSplinePoints())
+	//Hittar närmaste spline nod för spelaren
+	SplineCount = SplineComp->FindInputKeyClosestToWorldLocation(PlayerLocation) + 1;
+
+	UKismetMathLibrary::VectorSpringInterp()
+	
+	if((PlayerLocation - AudioCarrier->GetComponentLocation()).Length() < TotalDistance)
+	{
+		FMath::Lerp(PlayerLocation,SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World),0.5f);
+	}
+	
+	/*if(SplineCount == SplineComp->GetNumberOfSplinePoints())
 	{
 		if(((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length() < 100))
 		{
@@ -59,14 +75,20 @@ void AWindGuideActor::ChangeAudioLocation()
 	}
 	else
 	{
-		UE_LOG(LogTemp,Warning,TEXT("%f"),(UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length());
-		if((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length() < 100)
+		//UE_LOG(LogTemp,Warning,TEXT("%f"),(UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length());
+		/*if((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - SplineComp->GetLocationAtSplinePoint(SplineCount,ESplineCoordinateSpace::World)).Length() < 100)
 		{
 			UE_LOG(LogTemp,Warning,TEXT("MOVED TO %i" ),SplineCount);
 			SplineCount++;
 			AudioComp->SetWorldTransform(SplineComp->GetTransformAtSplinePoint(SplineCount, ESplineCoordinateSpace::World));
 		}
+
+		if((UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation() - AudioComp->GetRelativeLocation()).Length() < 100)
+		{
+			
+			AudioComp->SetWorldLocation(SplineComp->GetLocationAtDistanceAlongSpline(5 * SplineLenght * GetWorld()->DeltaTimeSeconds, ESplineCoordinateSpace::World));
+		}
 	}
-	
+	*/
 }
 
