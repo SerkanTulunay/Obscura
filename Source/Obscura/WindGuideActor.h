@@ -40,7 +40,8 @@ private:
 	UAudioComponent* AudioComp;
 
 	UPROPERTY(EditAnywhere)
-	float TotalDistance = 50;
+	float DistanceOffset = 300;
+	
 	int SplineCount = 0;
 
 	//Functions
