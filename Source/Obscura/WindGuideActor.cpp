@@ -4,9 +4,7 @@
 #include "WindGuideActor.h"
 #include "Components/AudioComponent.h"
 #include "Components/SplineComponent.h"
-#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AWindGuideActor::AWindGuideActor()
@@ -35,13 +33,12 @@ void AWindGuideActor::BeginPlay()
 // Called every frame
 void AWindGuideActor::Tick(float DeltaTime)
 {
-	PlayerLocation = UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation();
 	Super::Tick(DeltaTime);
 	if(!AudioComp->IsPlaying() && SplineCount != SplineComp->GetNumberOfSplinePoints())
 	{
 		AudioComp->Play();
 	}
-
+	PlayerLocation = UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation();
 	ChangeAudioLocation();
 }
 
