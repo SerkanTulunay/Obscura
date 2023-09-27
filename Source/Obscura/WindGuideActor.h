@@ -28,7 +28,7 @@ private:
 	UPROPERTY(VisibleAnywhere,Category="Spline",meta=(AllowPrivateAccess))
 	class USplineComponent* SplineComp;
 
-	FVector PlayerLocation;
+	APawn* Player;
 
 	UPROPERTY(VisibleAnywhere,Category="Spline",meta=(AllowPrivateAccess))
 	float SplineSpeed = 10;

@@ -38,13 +38,21 @@ void AWindGuideActor::Tick(float DeltaTime)
 	{
 		AudioComp->Play();
 	}
-	PlayerLocation = UGameplayStatics::GetPlayerController(this,0)->GetPawn()->GetActorLocation();
+	Player = UGameplayStatics::GetPlayerController(this,0)->GetPawn();
+	if(FVector::DotProduct(Player->GetActorForwardVector(),AudioCarrier->GetComponentLocation() - Player->GetActorLocation()) < -0.3)
+	{
+		AudioComp->SetPitchMultiplier(FMath::Lerp(1,0.5,0.5));
+	}
+	else
+	{
+		AudioComp->SetPitchMultiplier(FMath::Lerp(0.5,1,0.5));
+	}
 	ChangeAudioLocation();
 }
 
 void AWindGuideActor::ChangeAudioLocation()
 {
-	const float CurrentDistance = SplineComp->GetDistanceAlongSplineAtSplineInputKey(SplineComp->FindInputKeyClosestToWorldLocation(PlayerLocation)) + DistanceOffset;
+	const float CurrentDistance = SplineComp->GetDistanceAlongSplineAtSplineInputKey(SplineComp->FindInputKeyClosestToWorldLocation(Player->GetActorLocation())) + DistanceOffset;
 	const FVector NewLocation = SplineComp->GetLocationAtDistanceAlongSpline(CurrentDistance,ESplineCoordinateSpace::World);
 	AudioCarrier->SetWorldLocation(NewLocation);
 }
