@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Math/UnrealMathUtility.h"
 #include "Misc/App.h"
+#include "Sound/SoundCue.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -52,31 +53,38 @@ private:
 	bool bCanHide = false;
 
 	bool bIsMoving = false;
-
-	UPROPERTY(EditAnywhere)
-	USoundBase* NearLockerSound;
-	UPROPERTY(EditAnywhere)
-	USoundBase* EnteringHideSound;
-	UPROPERTY(EditAnywhere)
-	USoundBase* ExitingHideSound;
 	
-//	UPROPERTY(EditAnywhere, Category = "sound")
-//	class USoundBase* HideSound;
 
-//	UPROPERTY(EditAnywhere, Category = "sound")
-	//class USoundBase* UnHideSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* NearLockerSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* EnteringHideSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundBase* ExitingHideSound;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* StepSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* WallBumpSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* TurnSwoosh;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	UAudioComponent* PlayerAudioComponent;
+	
+
 	
 	//Functions
 	UFUNCTION(BlueprintCallable)
 	void ToggleHide();
 	bool ScanHidePlace();
-	void Run();
 	UFUNCTION(BlueprintCallable)
 	void MoveHorizontal(float Axis);
 	UFUNCTION(BlueprintCallable)
 	void MoveVertical(float Axis);
 	UFUNCTION(BlueprintCallable)
 	void CameraYaw(float Axis);
+
 
 private:
 

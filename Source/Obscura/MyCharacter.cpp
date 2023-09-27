@@ -41,52 +41,52 @@ void AMyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	ScanHidePlace();
 	SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(), TargetRotation, DeltaTime, 500.f ));
-	if(GetActorRotation() == TargetRotation)
+	
+	if(GetActorRotation().Equals(TargetRotation))//Enables movement if rotation is finished
 		bIsMoving = false;
+
+
+		
+	
 }
 
 // Called to bind functionality to input
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	PlayerInputComponent->BindAction("Hide",IE_Pressed,this,&AMyCharacter::ToggleHide);
+
+	//Old inputs:
 	//PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
 	//PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
 	//PlayerInputComponent->BindAxis("MouseYaw",this,&AMyCharacter::CameraYaw);
-	PlayerInputComponent->BindAction("Hide",IE_Pressed,this,&AMyCharacter::ToggleHide);
 }
 
-void AMyCharacter::ToggleHide()
+void AMyCharacter::ToggleHide()//Player hides/unhides in locker if in range
 {
 	if(!bIsHiding)
 	{
-	if(ScanHidePlace())
+	if(ScanHidePlace())//Player hides
 	{
-		UE_LOG(LogTemp,Warning,TEXT("HIDING"));
 		bIsHiding = true;
 
 		UGameplayStatics::PlaySoundAtLocation(HideSpotHit.GetActor(), EnteringHideSound, HideSpotHit.GetActor()->GetActorLocation());
-		SetActorRotation(HideSpotHit.GetActor()->GetActorForwardVector().Rotation());
-			//Make sound to go into locker
+		TargetRotation = (HideSpotHit.GetActor()->GetActorForwardVector().Rotation());
 	}
 	}
 	else
 	{
-		if(ScanHidePlace())
+		if(ScanHidePlace()) //Player unhides
 		{
-			UE_LOG(LogTemp,Warning,TEXT("HIDING"));
 			bIsHiding = true;
 			UGameplayStatics::PlaySoundAtLocation(HideSpotHit.GetActor(), ExitingHideSound, HideSpotHit.GetActor()->GetActorLocation());
 		}
-	UE_LOG(LogTemp,Warning,TEXT("UnHIDING"));
-
 	bIsHiding = false;
 	}
-	//UGameplayStatics::PlaySoundAtLocation(this, UnHideSound , this->GetActorLocation());
-	//make sound to leave locker
 	
 }
 
-bool AMyCharacter::ScanHidePlace()
+bool AMyCharacter::ScanHidePlace()//Sweeps for lockers in vicinity
 {
 	const float Radius = 200.f;
 
@@ -98,62 +98,67 @@ bool AMyCharacter::ScanHidePlace()
 
 	if(bCanHide)
 	{
-		//UE_LOG(LogTemp,Warning,TEXT("%s"),*HideSpotHit.GetComponent()->GetName());
 		HideSpotLocation = HideSpotHit.GetActor()->GetActorLocation();
-		//make sound and set hidable true
 	}
 	return bCanHide;
 }
 
-void AMyCharacter::Run()
-{
-}
 
-void AMyCharacter::MoveHorizontal(float Axis)
+void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis if able to
 {
+	//Check for wall blocking path
 	const float Radius = 1.f;
-
 	ECollisionChannel TraceChanel=ECC_Pawn;	
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
 	FHitResult hit;
 	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorRightVector()*Axis*100, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
-	if(!bIsHiding && !MovementBlocked)
-		SetActorLocation(GetActorLocation()+GetActorRightVector()*Axis*100);
-	if(MovementBlocked)
+
+	
+	if(!bIsHiding && !MovementBlocked && abs(Axis)>0)//Player can move -> Moves player
 	{
-		//PlayBlockedSound
+		SetActorLocation(GetActorLocation()+GetActorRightVector()*Axis*100);
+		UGameplayStatics::PlaySoundAtLocation(this, StepSound, GetActorLocation());
+	}
+	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation());
 	}
 
 }
 
-void AMyCharacter::MoveVertical(float Axis)
+void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis if able to
 {
+	//Check for wall blocking path
 	const float Radius = 1.f;
-
 	ECollisionChannel TraceChanel=ECC_Pawn;	
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
 	FHitResult hit;
 	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorForwardVector()*Axis*100, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
-	if(!bIsHiding && !MovementBlocked && !bIsMoving)
-		SetActorLocation(GetActorLocation()+GetActorForwardVector()*Axis*100);
-	if(MovementBlocked)
+
+	
+	if(!bIsHiding && !MovementBlocked && !bIsMoving && abs(Axis)>0)//Player can move -> Moves player
 	{
-		//PlayBlockedSound
+		SetActorLocation(GetActorLocation()+GetActorForwardVector()*Axis*100);
+		UGameplayStatics::PlaySoundAtLocation(this, StepSound, GetActorLocation());
+	}
+	
+	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation());
 	}
 
 }
 
-void AMyCharacter::CameraYaw(float Axis)
+void AMyCharacter::CameraYaw(float Axis) //Rotates player 90 degrees if able to
 {
 	if(!bIsHiding && !bIsMoving)
 	{
 		TargetRotation = TargetRotation + FRotator(0,90*Axis,0);
+		UGameplayStatics::PlaySoundAtLocation(this, TurnSwoosh, GetActorLocation()+GetActorRightVector()*Axis*50);
 		bIsMoving = true;
 	}
-	//SetActorRotation(GetActorRotation() + FRotator(0,90*Axis,0));
-	//PlayRotationSound
-	//SetActorRotation(FMath::RInterpConstantTo(GetActorRotation(), GetActorRotation() + FRotator(0,90*Axis,0), FApp::GetDeltaTime(), 0.3f ));
+
 }
 
