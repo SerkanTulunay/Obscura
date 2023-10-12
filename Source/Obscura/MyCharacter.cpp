@@ -122,7 +122,7 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 	}
 	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation() + GetActorRightVector()*Axis*100);
 	}
 
 }
@@ -146,7 +146,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 	
 	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation() + GetActorForwardVector()*Axis*100);
 	}
 
 }
