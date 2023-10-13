@@ -122,7 +122,20 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 	}
 	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
 	{
+		float VolMult;
+		if (Axis>0)
+			VolMult = 1;
+		else
+		{
+			VolMult = 0.4f;
+		}
+		if (hit.GetActor()->ActorHasTag("Door"))
+			UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation()+ GetActorRightVector()*Axis*100, VolMult);
+		else
+		{
+			
 		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation() + GetActorRightVector()*Axis*100);
+		}
 	}
 
 }
@@ -154,7 +167,12 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 		{
 			VolMult = 0.4f;
 		}
+		if (hit.GetActor()->ActorHasTag("Door"))
+			UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+		else
+		{
 		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation(), VolMult);
+		}
 	}
 
 }

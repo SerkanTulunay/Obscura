@@ -70,6 +70,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* TurnSwoosh;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* DoorBumpSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	UAudioComponent* PlayerAudioComponent;
 	
 
