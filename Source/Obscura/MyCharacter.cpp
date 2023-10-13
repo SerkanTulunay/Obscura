@@ -112,12 +112,12 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
 	FHitResult hit;
-	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorRightVector()*Axis*100, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorRightVector()*Axis*200, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
 
 	
 	if(!bIsHiding && !MovementBlocked && abs(Axis)>0)//Player can move -> Moves player
 	{
-		SetActorLocation(GetActorLocation()+GetActorRightVector()*Axis*100);
+		SetActorLocation(GetActorLocation()+GetActorRightVector()*Axis*200);
 		UGameplayStatics::PlaySoundAtLocation(this, StepSound, GetActorLocation());
 	}
 	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
@@ -135,18 +135,26 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
 	FHitResult hit;
-	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorForwardVector()*Axis*100, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+	bool MovementBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorForwardVector()*Axis*200, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
 
 	
 	if(!bIsHiding && !MovementBlocked && !bIsMoving && abs(Axis)>0)//Player can move -> Moves player
 	{
-		SetActorLocation(GetActorLocation()+GetActorForwardVector()*Axis*100);
+		SetActorLocation(GetActorLocation()+GetActorForwardVector()*Axis*200);
+
 		UGameplayStatics::PlaySoundAtLocation(this, StepSound, GetActorLocation());
 	}
 	
 	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation() + GetActorForwardVector()*Axis*100);
+		float VolMult;
+		if (Axis>0)
+			VolMult = 1;
+		else
+		{
+			VolMult = 0.4f;
+		}
+		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation(), VolMult);
 	}
 
 }
