@@ -55,7 +55,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Hide",IE_Pressed,this,&AMyCharacter::ToggleHide);
-
+	PlayerInputComponent->BindAction("Stun",IE_Pressed,this,&AMyCharacter::StunEnemy);
 	//Old inputs:
 	//PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
 	//PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
@@ -175,6 +175,18 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 		}
 	}
 
+}
+
+void AMyCharacter::StunEnemy()
+{
+	const float Radius = 200.f;
+
+	ECollisionChannel TraceChanel=ECC_Pawn;	
+	FCollisionQueryParams TraceParams;
+	TraceParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->SweepSingleByChannel(HideSpotHit, this->GetActorLocation(), this->GetActorLocation(), FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(Radius), TraceParams);
+	
 }
 
 void AMyCharacter::CameraYaw(float Axis) //Rotates player 90 degrees if able to
