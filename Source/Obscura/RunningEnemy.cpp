@@ -22,7 +22,21 @@ void ARunningEnemy::BeginPlay()
 void ARunningEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (StunTimer>0)
+	{
+		StunTimer-=DeltaTime;
+	}
+	else
+	{
+		//bIsStunned = false;
+	}
 
+}
+
+void ARunningEnemy::BecomeStunned()
+{
+	//bIsStunned = true;
+	StunTimer = 2;
 }
 
 // Called to bind functionality to input

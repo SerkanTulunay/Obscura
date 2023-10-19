@@ -55,7 +55,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Hide",IE_Pressed,this,&AMyCharacter::ToggleHide);
-	PlayerInputComponent->BindAction("Stun",IE_Pressed,this,&AMyCharacter::StunEnemy);
+	//PlayerInputComponent->BindAction("Stun",IE_Pressed,this,&AMyCharacter::StunEnemy);
 	//Old inputs:
 	//PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
 	//PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
@@ -177,15 +177,15 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 
 }
 
-void AMyCharacter::StunEnemy()
+void AMyCharacter::StunEnemy() const
 {
-	const float Radius = 200.f;
-
-	ECollisionChannel TraceChanel=ECC_Pawn;	
-	FCollisionQueryParams TraceParams;
-	TraceParams.AddIgnoredActor(this);
-
-	bool bHit = GetWorld()->SweepSingleByChannel(HideSpotHit, this->GetActorLocation(), this->GetActorLocation(), FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(Radius), TraceParams);
+	
+	TArray<AActor*> Result;
+	GetOverlappingActors(Result, ARunningEnemy::StaticClass());
+	for (auto A : Result)
+	{
+		static_cast<ARunningEnemy*>(A)->BecomeStunned();
+	}
 	
 }
 

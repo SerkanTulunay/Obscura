@@ -7,6 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "Misc/App.h"
 #include "Sound/SoundCue.h"
+#include "RunningEnemy.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -26,7 +27,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void StunEnemy();
+	void StunEnemy() const;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

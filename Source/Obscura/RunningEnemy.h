@@ -23,10 +23,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void BecomeStunned();
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	AActor* Target;
+//	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+//	bool bIsStunned;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float StunTimer;
 
 };
