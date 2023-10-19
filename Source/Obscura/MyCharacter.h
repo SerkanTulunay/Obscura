@@ -34,6 +34,8 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHiding = false;
 
+	bool bHasKey = false;
+	
 	//void TakeDamage();
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	int ControllerIndex;
@@ -55,6 +57,7 @@ private:
 	bool bCanHide = false;
 
 	bool bIsMoving = false;
+
 	
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
@@ -73,6 +76,8 @@ private:
 	USoundCue* TurnSwoosh;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* DoorBumpSound;
+	UPROPERTY(EditAnywhere,Category = "Sounds")
+	USoundCue* DoorUnlocking;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	UAudioComponent* PlayerAudioComponent;
 	

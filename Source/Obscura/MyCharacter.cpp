@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "Sound/SoundCue.h"
+#include "Door.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -44,10 +45,6 @@ void AMyCharacter::Tick(float DeltaTime)
 	
 	if(GetActorRotation().Equals(TargetRotation))//Enables movement if rotation is finished
 		bIsMoving = false;
-
-
-		
-	
 }
 
 // Called to bind functionality to input
@@ -129,13 +126,22 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 		{
 			VolMult = 0.4f;
 		}
-		if (hit.GetActor()->ActorHasTag("Door"))
-			UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation()+ GetActorRightVector()*Axis*100, VolMult);
+		if (ADoor* Door = Cast<ADoor>(hit.GetActor()))
+		{
+			if(bHasKey)
+			{
+				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
+				Door->SetOverlapEventTrue();
+			}
+			else
+				UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+		}
 		else
 		{
 			
 		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation() + GetActorRightVector()*Axis*100);
 		}
+		UE_LOG(LogTemp,Warning,TEXT("%s"),*hit.GetActor()->GetName());
 	}
 
 }
@@ -167,14 +173,21 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 		{
 			VolMult = 0.4f;
 		}
-		if (hit.GetActor()->ActorHasTag("Door"))
+		if (ADoor* Door = Cast<ADoor>(hit.GetActor()))
+		{
+			if(bHasKey)
+			{
+				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
+				Door->SetOverlapEventTrue();
+			}
+			else
 			UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+		}
 		else
 		{
 		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation(), VolMult);
 		}
 	}
-
 }
 
 void AMyCharacter::StunEnemy() const

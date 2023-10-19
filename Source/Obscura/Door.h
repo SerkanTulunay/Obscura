@@ -24,13 +24,19 @@ private:
 	UStaticMeshComponent* DoorMesh;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* KeyMesh;
-
 	UPROPERTY(EditAnywhere)
 	UChildActorComponent* KeyActor;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* TeleportLocationMesh;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResul);
+	
+	void SetOverlapEventTrue();
 	bool bIsLocked = true;
 
 };
