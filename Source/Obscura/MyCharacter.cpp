@@ -131,7 +131,7 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 			if(bHasKey)
 			{
 				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
-				Door->SetOverlapEventTrue();
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 				bHasKey = false;
 			}
 			else
@@ -179,7 +179,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 			if(bHasKey)
 			{
 				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
-				Door->SetOverlapEventTrue();
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 				bHasKey = false;
 			}
 			else

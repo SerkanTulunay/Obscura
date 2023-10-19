@@ -26,8 +26,7 @@ private:
 	UStaticMeshComponent* KeyMesh;
 	UPROPERTY(EditAnywhere)
 	UChildActorComponent* KeyActor;
-	UPROPERTY(EditAnywhere)
-	UStaticMeshComponent* TeleportLocationMesh;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -38,5 +37,7 @@ public:
 	
 	void SetOverlapEventTrue();
 	bool bIsLocked = true;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* TeleportLocationMesh;
 
 };
