@@ -3,6 +3,9 @@
 
 #include "RunningEnemy.h"
 
+
+
+
 // Sets default values
 ARunningEnemy::ARunningEnemy()
 {
@@ -28,15 +31,16 @@ void ARunningEnemy::Tick(float DeltaTime)
 	}
 	else
 	{
-		//bIsStunned = false;
+		bIsStunned = false;
 	}
 
 }
 
 void ARunningEnemy::BecomeStunned()
 {
-	//bIsStunned = true;
+	bIsStunned = true;
 	StunTimer = 2;
+	UGameplayStatics::PlaySoundAtLocation(this, GetStunnedSound, GetActorLocation());
 }
 
 // Called to bind functionality to input

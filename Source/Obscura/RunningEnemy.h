@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 #include "RunningEnemy.generated.h"
 
 UCLASS()
@@ -30,9 +32,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	AActor* Target;
-//	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-//	bool bIsStunned;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsStunned;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float StunTimer;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* GetStunnedSound;
+
 
 };

@@ -27,7 +27,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void StunEnemy() const;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -86,6 +85,7 @@ private:
 	//Functions
 	UFUNCTION(BlueprintCallable)
 	void ToggleHide();
+	void StunEnemy();
 	bool ScanHidePlace();
 	UFUNCTION(BlueprintCallable)
 	void MoveHorizontal(float Axis);
