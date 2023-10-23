@@ -33,6 +33,7 @@ void AMyCharacter::BeginPlay()
 	TargetRotation = GetActorRotation();
 	Super::BeginPlay();
 	bIsHiding = false;
+	SpawnPoint = GetActorLocation();
 	
 }
 
@@ -45,6 +46,9 @@ void AMyCharacter::Tick(float DeltaTime)
 	
 	if(GetActorRotation().Equals(TargetRotation))//Enables movement if rotation is finished
 		bIsMoving = false;
+
+	if(StunCooldown >= 0)
+		StunCooldown-=DeltaTime;
 }
 
 // Called to bind functionality to input
@@ -57,6 +61,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	//PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
 	//PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
 	//PlayerInputComponent->BindAxis("MouseYaw",this,&AMyCharacter::CameraYaw);
+}
+
+void AMyCharacter::Respawn()
+{
+	SetActorLocation(SpawnPoint);
 }
 
 void AMyCharacter::ToggleHide()//Player hides/unhides in locker if in range
@@ -132,6 +141,7 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 			{
 				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 				bHasKey = false;
 			}
 			else
@@ -180,6 +190,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 			{
 				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 				bHasKey = false;
 			}
 			else
@@ -194,7 +205,9 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 
 void AMyCharacter::StunEnemy()
 {
-
+	if (StunCooldown<=0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hej"));
 	const float Radius = 500.f;
 
 
@@ -206,13 +219,12 @@ void AMyCharacter::StunEnemy()
 
 	if (bhit)
 	{
-
-
-			UE_LOG(LogTemp, Warning, TEXT("hej"));
 		if(ARunningEnemy* Enemy = Cast<ARunningEnemy>(EnemyHit.GetActor()))
 		{
 			Enemy->BecomeStunned();
 		}
+	}
+	StunCooldown = 1;
 	}
 }
 

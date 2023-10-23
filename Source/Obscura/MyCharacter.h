@@ -30,6 +30,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Respawn();
+	
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHiding = false;
 
@@ -57,6 +59,10 @@ private:
 
 	bool bIsMoving = false;
 
+	FVector SpawnPoint;
+
+	float StunCooldown = 0;
+
 	
 
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
@@ -77,6 +83,8 @@ private:
 	USoundCue* DoorBumpSound;
 	UPROPERTY(EditAnywhere,Category = "Sounds")
 	USoundCue* DoorUnlocking;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* StunActivation;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	UAudioComponent* PlayerAudioComponent;
 	

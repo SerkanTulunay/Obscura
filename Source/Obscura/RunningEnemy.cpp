@@ -3,7 +3,7 @@
 
 #include "RunningEnemy.h"
 
-
+#include "MyCharacter.h"
 
 
 // Sets default values
@@ -18,6 +18,7 @@ ARunningEnemy::ARunningEnemy()
 void ARunningEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	SpawnPoint = GetActorLocation();
 	
 }
 
@@ -34,6 +35,26 @@ void ARunningEnemy::Tick(float DeltaTime)
 		bIsStunned = false;
 	}
 
+}
+
+void ARunningEnemy::Attack()
+{
+	const float Radius = 250.f;
+
+
+	FCollisionQueryParams TraceParams;
+	TraceParams.AddIgnoredActor(this);
+	FHitResult PlayerHit;
+
+	bool bhit  = GetWorld()->SweepSingleByChannel(PlayerHit, this->GetActorLocation(), this->GetActorLocation(), FQuat::Identity, ECC_WorldDynamic, FCollisionShape::MakeSphere(Radius), TraceParams);
+	if(!bIsStunned)
+	{
+		if(AMyCharacter* Player = Cast<AMyCharacter>(PlayerHit.GetActor()))
+		{
+			Player->Respawn();
+			SetActorLocation(SpawnPoint);
+		}
+	}
 }
 
 void ARunningEnemy::BecomeStunned()
