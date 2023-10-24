@@ -36,6 +36,8 @@ public:
 	bool bIsHiding = false;
 
 	bool bHasKey = false;
+
+	int TotalFuses;
 	
 	//void TakeDamage();
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

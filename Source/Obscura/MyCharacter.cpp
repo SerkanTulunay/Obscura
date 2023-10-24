@@ -137,19 +137,33 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 		}
 		if (ADoor* Door = Cast<ADoor>(hit.GetActor()))
 		{
-			if(bHasKey)
+			if(Door->bIsLocked)
 			{
-				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
-				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
-				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
-				bHasKey = false;
+				if(bHasKey)
+				{
+					if(Door->bIsFuseDoor)
+					{
+						//Player just door opening sound
+					}
+					else
+					{
+						UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
+					}
+					SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
+					bHasKey = false;
+				}
+				else
+				{
+						UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+				}
 			}
 			else
-				UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());	
+			
 		}
 		else
 		{
-			
 		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation() + GetActorRightVector()*Axis*100);
 		}
 		UE_LOG(LogTemp,Warning,TEXT("%s"),*hit.GetActor()->GetName());
@@ -186,15 +200,29 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 		}
 		if (ADoor* Door = Cast<ADoor>(hit.GetActor()))
 		{
-			if(bHasKey)
+			if(Door->bIsLocked)
 			{
-				UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
-				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
-				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
-				bHasKey = false;
+				if(bHasKey)
+				{
+					if(Door->bIsFuseDoor)
+					{
+						//Player just door opening sound
+					}
+					else
+					{
+						UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
+					}
+					SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
+					bHasKey = false;
+				}
+				else
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+				}
 			}
 			else
-			UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());	
 		}
 		else
 		{

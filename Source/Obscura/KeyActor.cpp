@@ -36,6 +36,7 @@ void AKeyActor::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 		UE_LOG(LogTemp,Warning,TEXT("Has KEY"));
 		HitPlayer->bHasKey = true;
 		UGameplayStatics::PlaySoundAtLocation(this,PickUpSound,GetActorLocation());
+		Destroy();
 	}
 }
 
