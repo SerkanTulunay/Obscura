@@ -31,7 +31,7 @@ private:
 	UStaticMeshComponent* FuseMesh;
 
 	UPROPERTY(EditAnywhere)
-	UAudioComponent* AudioComp
+	UAudioComponent* AudioComp;
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* PickUpSound;
