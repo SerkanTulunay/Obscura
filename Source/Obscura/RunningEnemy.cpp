@@ -52,6 +52,7 @@ void ARunningEnemy::Attack()
 		if(AMyCharacter* Player = Cast<AMyCharacter>(PlayerHit.GetActor()))
 		{
 			Player->Respawn();
+			Health = 2;
 			SetActorLocation(SpawnPoint);
 			UGameplayStatics::PlaySoundAtLocation(this, AttackHitSound, GetActorLocation());
 		}
@@ -60,9 +61,22 @@ void ARunningEnemy::Attack()
 
 void ARunningEnemy::BecomeStunned()
 {
+	if(bIsAttacking)
+	{
+		
 	bIsStunned = true;
 	StunTimer = 2;
 	UGameplayStatics::PlaySoundAtLocation(this, GetStunnedSound, GetActorLocation());
+	if (Health>0)
+	{
+		Health-=1;
+	}
+	else
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+		Destroy();
+	}
+	}
 }
 
 // Called to bind functionality to input

@@ -37,15 +37,23 @@ private:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	AActor* Target;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	bool bIsStunned;
+	bool bIsStunned = false;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	float StunTimer;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	float Health = 2;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool bIsAttacking = false;
+	FVector SpawnPoint;
+	
+	
+	//Sounds
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* GetStunnedSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* AttackHitSound;
-	
-	FVector SpawnPoint;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* DeathSound;
 
 
 };
