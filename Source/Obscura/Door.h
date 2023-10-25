@@ -33,6 +33,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void PlayHintSound() override;
+
+	void ToggleActiveEnemies();
 	
 	//UFUNCTION()
 	//void OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -50,4 +52,9 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	UAudioComponent* AudioComp;
+
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> NewActors;
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> OldActors;
 };

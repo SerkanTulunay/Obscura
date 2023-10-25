@@ -196,6 +196,7 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 					SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 					bHasKey = false;
+					Door->ToggleActiveEnemies();
 				}
 				else
 				{
@@ -203,7 +204,11 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 				}
 			}
 			else
-				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());	
+			{
+				
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+				Door->ToggleActiveEnemies();
+			}
 			
 		}
 		else
@@ -259,6 +264,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 					SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 					bHasKey = false;
+					Door->ToggleActiveEnemies();
 				}
 				else
 				{
@@ -266,7 +272,11 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 				}
 			}
 			else
-				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());	
+			{
+				
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+				Door->ToggleActiveEnemies();
+			}
 		}
 		else
 		{
