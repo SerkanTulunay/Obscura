@@ -54,6 +54,38 @@ void AMyCharacter::Tick(float DeltaTime)
 		StunAvailable = true;
 		UGameplayStatics::PlaySoundAtLocation(this, StunAvailableSound, GetActorLocation());
 	}
+
+	if(bSendPulse)
+	{
+		FCollisionShape ColSphere = FCollisionShape::MakeSphere(SphereRadius);
+		DrawDebugSphere(GetWorld(),GetActorLocation(),ColSphere.GetSphereRadius(),20,FColor::Purple,false,0.1f);
+		FHitResult OutHit;
+		bool bHit = GetWorld()->SweepSingleByChannel(OutHit,GetActorLocation(),GetActorLocation(),FQuat::Identity,ECC_GameTraceChannel4,ColSphere,QueryParams);
+
+		if(bHit)
+		{
+			IHintInterface* Interface = Cast<IHintInterface>(OutHit.GetActor());
+			if(Interface)
+			{
+				Interface->PlayHintSound();
+				QueryParams.AddIgnoredActor(OutHit.GetActor());
+			}
+		}
+
+		if(SphereRadius > MaxRadius)
+		{
+			bSendPulse = false;
+			SphereRadius = DefaultSpehereRadius;
+			QueryParams.ClearIgnoredActors();
+		}
+		else
+		{
+			SphereRadius += SphereGrowthRate*DeltaTime;
+		}
+	}
+
+
+	
 }
 
 // Called to bind functionality to input
@@ -62,6 +94,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Hide",IE_Pressed,this,&AMyCharacter::ToggleHide);
 	PlayerInputComponent->BindAction("Stun", IE_Pressed, this, &AMyCharacter::StunEnemy);
+	PlayerInputComponent->BindAction("Pulse",IE_Pressed,this,&AMyCharacter::StartPulse);
 	//Old inputs:
 	//PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
 	//PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
@@ -113,6 +146,12 @@ bool AMyCharacter::ScanHidePlace()//Sweeps for lockers in vicinity
 	}
 	return bCanHide;
 }
+
+void AMyCharacter::StartPulse()
+{
+	bSendPulse = true;
+}
+
 
 
 void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis if able to

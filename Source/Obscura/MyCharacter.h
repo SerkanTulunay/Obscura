@@ -38,6 +38,17 @@ public:
 	bool bHasKey = false;
 
 	int TotalFuses;
+
+	UPROPERTY(EditAnywhere)
+	float DefaultSpehereRadius = 200;
+
+	float SphereRadius = DefaultSpehereRadius;
+
+	UPROPERTY(EditAnywhere)
+	float MaxRadius = 400;
+
+	UPROPERTY(EditAnywhere)
+	float SphereGrowthRate = 80;
 	
 	//void TakeDamage();
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -53,6 +64,7 @@ private:
 	
 	FHitResult HideSpotHit;
 
+	FCollisionQueryParams QueryParams;
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	FVector HideSpotLocation;
 
@@ -66,6 +78,10 @@ private:
 	float StunCooldown = 0;
 
 	bool StunAvailable = false;
+
+	bool bSendPulse = false;
+
+	TArray<FHitResult> OutHits;
 	
 //sounds
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
@@ -98,6 +114,7 @@ private:
 	void ToggleHide();
 	void StunEnemy();
 	bool ScanHidePlace();
+	void StartPulse();
 	UFUNCTION(BlueprintCallable)
 	void MoveHorizontal(float Axis);
 	UFUNCTION(BlueprintCallable)

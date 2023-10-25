@@ -3,6 +3,7 @@
 
 #include "Door.h"
 
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -12,7 +13,10 @@ ADoor::ADoor()
 	PrimaryActorTick.bCanEverTick = false;
 	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>("DoorMesh");
 	TeleportLocationMesh = CreateDefaultSubobject<UStaticMeshComponent>("TeleportMesh");
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
+
 	DoorMesh->SetupAttachment(RootComponent);
+	AudioComp->SetupAttachment(DoorMesh);
 	TeleportLocationMesh->SetupAttachment(RootComponent);
 
 }
@@ -27,6 +31,11 @@ void ADoor::BeginPlay()
 void ADoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ADoor::PlayHintSound()
+{
+	AudioComp->Play();
 }
 
 

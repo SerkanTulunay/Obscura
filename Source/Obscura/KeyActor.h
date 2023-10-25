@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HintInterface.h"
 #include "GameFramework/Actor.h"
 #include "KeyActor.generated.h"
 
 UCLASS()
-class OBSCURA_API AKeyActor : public AActor
+class OBSCURA_API AKeyActor : public AActor, public IHintInterface
 {
 	GENERATED_BODY()
 	
@@ -23,6 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void PlayHintSound() override;
 private:
 
 	UFUNCTION()
@@ -32,6 +34,8 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* KeyMesh;
 
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComp;
 	UPROPERTY(EditAnywhere)
 	USoundBase* PickUpSound;
 };
