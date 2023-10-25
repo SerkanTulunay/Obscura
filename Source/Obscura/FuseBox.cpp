@@ -4,6 +4,7 @@
 #include "FuseBox.h"
 
 #include "MyCharacter.h"
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -12,7 +13,9 @@ AFuseBox::AFuseBox()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	FuseBoxMesh = CreateDefaultSubobject<UStaticMeshComponent>("FuseBoxMesh");
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
 	FuseBoxMesh->SetupAttachment(RootComponent);
+	AudioComp->SetupAttachment(FuseBoxMesh);
 
 }
 
@@ -30,21 +33,24 @@ void AFuseBox::Tick(float DeltaTime)
 
 }
 
+void AFuseBox::PlayHintSound()
+{
+	AudioComp->Play();
+}
+
 void AFuseBox::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResul)
+                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResul)
 {
 	if(AMyCharacter* Player = Cast<AMyCharacter>(OtherActor))
 	{
+		UE_LOG(LogTemp,Warning,TEXT("%i"),Player->TotalFuses);
 		if(Player->TotalFuses == TotalFuseToCollect)
 		{
 			Player->bHasKey = true;
 		}
 		else
 		{
-			for(int i = TotalFuseToCollect - Player->TotalFuses; TotalFuseToCollect >= 0; i--)
-			{
-				//Play Indicator sound for missing sound
-			}
+			UGameplayStatics::PlaySoundAtLocation(this,MissingFuseSound,GetActorLocation());
 		}
 	}
 }
