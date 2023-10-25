@@ -35,7 +35,7 @@ void AKeyActor::Tick(float DeltaTime)
 
 void AKeyActor::PlayHintSound()
 {
-	UE_LOG(LogTemp,Warning,TEXT("KEY HINT"));
+	AudioComp->Play();
 }
 
 void AKeyActor::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

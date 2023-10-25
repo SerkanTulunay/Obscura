@@ -35,7 +35,6 @@ void AFuse::Tick(float DeltaTime)
 void AFuse::PlayHintSound()
 {
 	AudioComp->Play();
-	UE_LOG(LogTemp,Warning,TEXT("FUSE HINT"));
 }
 
 void AFuse::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
