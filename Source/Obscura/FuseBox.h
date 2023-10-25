@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HintInterface.h"
 #include "GameFramework/Actor.h"
 #include "FuseBox.generated.h"
 
 UCLASS()
-class OBSCURA_API AFuseBox : public AActor
+class OBSCURA_API AFuseBox : public AActor, public IHintInterface
 {
 	GENERATED_BODY()
 	
@@ -23,6 +24,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void PlayHintSound() override;
 private:
 	UFUNCTION()
 	void OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -32,7 +34,13 @@ private:
 	int TotalFuseToCollect;
 
 	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* FuseBoxMesh;
+	UStaticMeshComponent* FuseBoxMesh;
+
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComp;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* MissingFuseSound;
 
 };
 
