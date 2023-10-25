@@ -4,6 +4,7 @@
 #include "KeyActor.h"
 #include "Door.h"
 #include "MyCharacter.h"
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -13,6 +14,10 @@ AKeyActor::AKeyActor()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	KeyMesh = CreateDefaultSubobject<UStaticMeshComponent>("KeyMesh");
+	KeyMesh->SetupAttachment(RootComponent);
+
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
+	AudioComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -28,8 +33,13 @@ void AKeyActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+void AKeyActor::PlayHintSound()
+{
+	UE_LOG(LogTemp,Warning,TEXT("KEY HINT"));
+}
+
 void AKeyActor::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult)
+                             int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult)
 {
 	if(AMyCharacter* HitPlayer = Cast<AMyCharacter>(OtherActor))
 	{
