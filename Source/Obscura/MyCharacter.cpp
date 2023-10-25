@@ -49,6 +49,11 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	if(StunCooldown >= 0)
 		StunCooldown-=DeltaTime;
+	else if(!StunAvailable)
+	{
+		StunAvailable = true;
+		UGameplayStatics::PlaySoundAtLocation(this, StunAvailableSound, GetActorLocation());
+	}
 }
 
 // Called to bind functionality to input
@@ -235,10 +240,9 @@ void AMyCharacter::StunEnemy()
 {
 	if (StunCooldown<=0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hej"));
+	StunAvailable = false;
+
 	const float Radius = 500.f;
-
-
 	UGameplayStatics::PlaySoundAtLocation(this, StunActivation, GetActorLocation());
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
@@ -253,7 +257,7 @@ void AMyCharacter::StunEnemy()
 			Enemy->BecomeStunned();
 		}
 	}
-	StunCooldown = 1;
+	StunCooldown = 2,5;
 	}
 }
 

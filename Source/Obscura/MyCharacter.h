@@ -65,16 +65,15 @@ private:
 
 	float StunCooldown = 0;
 
+	bool StunAvailable = false;
 	
-
+//sounds
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* NearLockerSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* EnteringHideSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* ExitingHideSound;
-
-
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* StepSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
@@ -87,6 +86,8 @@ private:
 	USoundCue* DoorUnlocking;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* StunActivation;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* StunAvailableSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	UAudioComponent* PlayerAudioComponent;
 	
