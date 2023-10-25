@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 #include "RunningEnemy.generated.h"
 
 UCLASS()
@@ -23,10 +25,35 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable)
+	void Attack();
+
+	void BecomeStunned();
+private:
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	AActor* Target;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool bIsStunned = false;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	float StunTimer;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	float Health = 2;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool bIsAttacking = false;
+	FVector SpawnPoint;
+	
+	
+	//Sounds
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* GetStunnedSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* AttackHitSound;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* DeathSound;
+
 
 };

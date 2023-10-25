@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HintInterface.h"
 #include "GameFramework/Actor.h"
 #include "Door.generated.h"
 
 UCLASS()
-class OBSCURA_API ADoor : public AActor
+class OBSCURA_API ADoor : public AActor, public IHintInterface
 {
 	GENERATED_BODY()
 	
@@ -24,13 +25,29 @@ private:
 	UStaticMeshComponent* DoorMesh;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* KeyMesh;
-
 	UPROPERTY(EditAnywhere)
 	UChildActorComponent* KeyActor;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	bool bIsLocked = true;
+	virtual void PlayHintSound() override;
+	
+	//UFUNCTION()
+	//void OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	//int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResul);
+	
+	//void SetOverlapEventTrue();
 
+	UPROPERTY(EditAnywhere)
+	bool bIsLocked = true;
+	
+	UPROPERTY(EditAnywhere)
+	bool bIsFuseDoor;
+	UPROPERTY(EditAnywhere)
+	UStaticMeshComponent* TeleportLocationMesh;
+private:
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComp;
 };

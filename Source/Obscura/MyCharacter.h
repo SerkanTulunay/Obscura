@@ -7,6 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "Misc/App.h"
 #include "Sound/SoundCue.h"
+#include "RunningEnemy.h"
 #include "MyCharacter.generated.h"
 
 UCLASS()
@@ -26,13 +27,29 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void StunEnemy();
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void Respawn();
+	
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsHiding = false;
 
+	bool bHasKey = false;
+
+	int TotalFuses;
+
+	UPROPERTY(EditAnywhere)
+	float DefaultSpehereRadius = 200;
+
+	float SphereRadius = DefaultSpehereRadius;
+
+	UPROPERTY(EditAnywhere)
+	float MaxRadius = 400;
+
+	UPROPERTY(EditAnywhere)
+	float SphereGrowthRate = 80;
+	
 	//void TakeDamage();
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	int ControllerIndex;
@@ -47,6 +64,7 @@ private:
 	
 	FHitResult HideSpotHit;
 
+	FCollisionQueryParams QueryParams;
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess))
 	FVector HideSpotLocation;
 
@@ -54,16 +72,24 @@ private:
 	bool bCanHide = false;
 
 	bool bIsMoving = false;
-	
 
+	FVector SpawnPoint;
+
+	float StunCooldown = 0;
+
+	bool StunAvailable = false;
+
+	bool bSendPulse = false;
+
+	TArray<FHitResult> OutHits;
+	
+//sounds
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* NearLockerSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* EnteringHideSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundBase* ExitingHideSound;
-
-
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* StepSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
@@ -72,6 +98,12 @@ private:
 	USoundCue* TurnSwoosh;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* DoorBumpSound;
+	UPROPERTY(EditAnywhere,Category = "Sounds")
+	USoundCue* DoorUnlocking;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* StunActivation;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* StunAvailableSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	UAudioComponent* PlayerAudioComponent;
 	
@@ -80,7 +112,9 @@ private:
 	//Functions
 	UFUNCTION(BlueprintCallable)
 	void ToggleHide();
+	void StunEnemy();
 	bool ScanHidePlace();
+	void StartPulse();
 	UFUNCTION(BlueprintCallable)
 	void MoveHorizontal(float Axis);
 	UFUNCTION(BlueprintCallable)

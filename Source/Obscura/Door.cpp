@@ -3,16 +3,21 @@
 
 #include "Door.h"
 
+#include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 ADoor::ADoor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>("DoorMesh");
-	KeyMesh = CreateDefaultSubobject<UStaticMeshComponent>("KeyMesh");
-	KeyActor = CreateDefaultSubobject<UChildActorComponent>("Key");
-	KeyMesh->SetupAttachment(RootComponent);
-	KeyActor->SetupAttachment(KeyMesh);
+	TeleportLocationMesh = CreateDefaultSubobject<UStaticMeshComponent>("TeleportMesh");
+	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
+
+	DoorMesh->SetupAttachment(RootComponent);
+	AudioComp->SetupAttachment(DoorMesh);
+	TeleportLocationMesh->SetupAttachment(RootComponent);
 
 }
 
@@ -20,7 +25,6 @@ ADoor::ADoor()
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -28,4 +32,10 @@ void ADoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void ADoor::PlayHintSound()
+{
+	AudioComp->Play();
+}
+
 

@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "Sound/SoundCue.h"
+#include "Door.h"
 
 // Sets default values
 AMyCharacter::AMyCharacter()
@@ -32,6 +33,7 @@ void AMyCharacter::BeginPlay()
 	TargetRotation = GetActorRotation();
 	Super::BeginPlay();
 	bIsHiding = false;
+	SpawnPoint = GetActorLocation();
 	
 }
 
@@ -45,8 +47,44 @@ void AMyCharacter::Tick(float DeltaTime)
 	if(GetActorRotation().Equals(TargetRotation))//Enables movement if rotation is finished
 		bIsMoving = false;
 
+	if(StunCooldown >= 0)
+		StunCooldown-=DeltaTime;
+	else if(!StunAvailable)
+	{
+		StunAvailable = true;
+		UGameplayStatics::PlaySoundAtLocation(this, StunAvailableSound, GetActorLocation());
+	}
 
-		
+	if(bSendPulse)
+	{
+		FCollisionShape ColSphere = FCollisionShape::MakeSphere(SphereRadius);
+		DrawDebugSphere(GetWorld(),GetActorLocation(),ColSphere.GetSphereRadius(),20,FColor::Purple,false,0.1f);
+		FHitResult OutHit;
+		bool bHit = GetWorld()->SweepSingleByChannel(OutHit,GetActorLocation(),GetActorLocation(),FQuat::Identity,ECC_GameTraceChannel4,ColSphere,QueryParams);
+
+		if(bHit)
+		{
+			IHintInterface* Interface = Cast<IHintInterface>(OutHit.GetActor());
+			if(Interface)
+			{
+				Interface->PlayHintSound();
+				QueryParams.AddIgnoredActor(OutHit.GetActor());
+			}
+		}
+
+		if(SphereRadius > MaxRadius)
+		{
+			bSendPulse = false;
+			SphereRadius = DefaultSpehereRadius;
+			QueryParams.ClearIgnoredActors();
+		}
+		else
+		{
+			SphereRadius += SphereGrowthRate*DeltaTime;
+		}
+	}
+
+
 	
 }
 
@@ -55,11 +93,17 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Hide",IE_Pressed,this,&AMyCharacter::ToggleHide);
-	PlayerInputComponent->BindAction("Stun",IE_Pressed,this,&AMyCharacter::StunEnemy);
+	PlayerInputComponent->BindAction("Stun", IE_Pressed, this, &AMyCharacter::StunEnemy);
+	PlayerInputComponent->BindAction("Pulse",IE_Pressed,this,&AMyCharacter::StartPulse);
 	//Old inputs:
 	//PlayerInputComponent->BindAxis("Horizontal",this,&AMyCharacter::MoveHorizontal);
 	//PlayerInputComponent->BindAxis("Vertical",this,&AMyCharacter::MoveVertical);
 	//PlayerInputComponent->BindAxis("MouseYaw",this,&AMyCharacter::CameraYaw);
+}
+
+void AMyCharacter::Respawn()
+{
+	SetActorLocation(SpawnPoint);
 }
 
 void AMyCharacter::ToggleHide()//Player hides/unhides in locker if in range
@@ -103,6 +147,12 @@ bool AMyCharacter::ScanHidePlace()//Sweeps for lockers in vicinity
 	return bCanHide;
 }
 
+void AMyCharacter::StartPulse()
+{
+	bSendPulse = true;
+}
+
+
 
 void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis if able to
 {
@@ -129,13 +179,38 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 		{
 			VolMult = 0.4f;
 		}
-		if (hit.GetActor()->ActorHasTag("Door"))
-			UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation()+ GetActorRightVector()*Axis*100, VolMult);
+		if (ADoor* Door = Cast<ADoor>(hit.GetActor()))
+		{
+			if(Door->bIsLocked)
+			{
+				if(bHasKey)
+				{
+					if(Door->bIsFuseDoor)
+					{
+						//Player just door opening sound
+					}
+					else
+					{
+						UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
+					}
+					SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
+					bHasKey = false;
+				}
+				else
+				{
+						UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+				}
+			}
+			else
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());	
+			
+		}
 		else
 		{
-			
 		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation() + GetActorRightVector()*Axis*100);
 		}
+		UE_LOG(LogTemp,Warning,TEXT("%s"),*hit.GetActor()->GetName());
 	}
 
 }
@@ -167,26 +242,62 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 		{
 			VolMult = 0.4f;
 		}
-		if (hit.GetActor()->ActorHasTag("Door"))
-			UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+		if (ADoor* Door = Cast<ADoor>(hit.GetActor()))
+		{
+			if(Door->bIsLocked)
+			{
+				if(bHasKey)
+				{
+					if(Door->bIsFuseDoor)
+					{
+						//Player just door opening sound
+					}
+					else
+					{
+						UGameplayStatics::PlaySoundAtLocation(this,DoorUnlocking,GetActorLocation(),VolMult);
+					}
+					SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
+					bHasKey = false;
+				}
+				else
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, DoorBumpSound, GetActorLocation(), VolMult);
+				}
+			}
+			else
+				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());	
+		}
 		else
 		{
 		UGameplayStatics::PlaySoundAtLocation(this, WallBumpSound, GetActorLocation(), VolMult);
 		}
 	}
-
 }
 
 void AMyCharacter::StunEnemy()
 {
-	const float Radius = 200.f;
+	if (StunCooldown<=0)
+	{
+	StunAvailable = false;
 
-	ECollisionChannel TraceChanel=ECC_Pawn;	
+	const float Radius = 500.f;
+	UGameplayStatics::PlaySoundAtLocation(this, StunActivation, GetActorLocation());
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
+	FHitResult EnemyHit;
 
-	bool bHit = GetWorld()->SweepSingleByChannel(HideSpotHit, this->GetActorLocation(), this->GetActorLocation(), FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(Radius), TraceParams);
-	
+	bool bhit  = GetWorld()->SweepSingleByChannel(EnemyHit, this->GetActorLocation(), this->GetActorLocation(), FQuat::Identity, ECC_GameTraceChannel3, FCollisionShape::MakeSphere(Radius), TraceParams);
+
+	if (bhit)
+	{
+		if(ARunningEnemy* Enemy = Cast<ARunningEnemy>(EnemyHit.GetActor()))
+		{
+			Enemy->BecomeStunned();
+		}
+	}
+	StunCooldown = 2,5;
+	}
 }
 
 void AMyCharacter::CameraYaw(float Axis) //Rotates player 90 degrees if able to
