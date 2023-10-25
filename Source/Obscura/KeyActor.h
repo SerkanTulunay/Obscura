@@ -27,6 +27,9 @@ public:
 	virtual void PlayHintSound() override;
 private:
 
+	UPROPERTY(EditAnywhere)
+	bool bIsActive = false;
+	
 	UFUNCTION()
 	void OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResul);

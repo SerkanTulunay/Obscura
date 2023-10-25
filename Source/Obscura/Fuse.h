@@ -31,8 +31,10 @@ private:
 	UStaticMeshComponent* FuseMesh;
 
 	UPROPERTY(EditAnywhere)
-	UAudioComponent* AudioComp;
-	
+	UAudioComponent* AudioComp
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* PickUpSound;
 	
 	UFUNCTION()
 	void OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

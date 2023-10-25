@@ -24,5 +24,4 @@ class OBSCURA_API IHintInterface
 public:
 	UFUNCTION()
 	virtual void PlayHintSound() = 0;
-	
 };

@@ -26,6 +26,7 @@ ADoor::ADoor()
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
+	AudioComp->SetActive(false);
 }
 
 // Called every frame
@@ -36,6 +37,7 @@ void ADoor::Tick(float DeltaTime)
 
 void ADoor::PlayHintSound()
 {
+	AudioComp->SetActive(true);
 	AudioComp->Play();
 }
 
@@ -50,7 +52,6 @@ void ADoor::ToggleActiveEnemies()
 	{
 		NewA->SetActorTickEnabled(true);
 	}
-		
 
 }
 
