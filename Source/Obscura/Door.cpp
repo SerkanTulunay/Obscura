@@ -15,8 +15,8 @@ ADoor::ADoor()
 	TeleportLocationMesh = CreateDefaultSubobject<UStaticMeshComponent>("TeleportMesh");
 	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
 
-	AudioComp->SetupAttachment(RootComponent);
 	DoorMesh->SetupAttachment(RootComponent);
+	AudioComp->SetupAttachment(DoorMesh);
 	TeleportLocationMesh->SetupAttachment(RootComponent);
 
 }

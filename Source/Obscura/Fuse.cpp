@@ -11,11 +11,11 @@
 AFuse::AFuse()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
 	FuseMesh = CreateDefaultSubobject<UStaticMeshComponent>("FuseMesh");
 	FuseMesh->SetupAttachment(RootComponent);
-
+	AudioComp->SetupAttachment(FuseMesh);
 }
 
 // Called when the game starts or when spawned

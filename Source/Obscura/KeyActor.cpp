@@ -17,7 +17,7 @@ AKeyActor::AKeyActor()
 	KeyMesh->SetupAttachment(RootComponent);
 
 	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
-	AudioComp->SetupAttachment(RootComponent);
+	AudioComp->SetupAttachment(KeyMesh);
 }
 
 // Called when the game starts or when spawned
