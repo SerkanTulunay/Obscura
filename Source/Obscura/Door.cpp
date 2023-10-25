@@ -3,6 +3,7 @@
 
 #include "Door.h"
 
+#include "RunningEnemy.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -36,6 +37,21 @@ void ADoor::Tick(float DeltaTime)
 void ADoor::PlayHintSound()
 {
 	AudioComp->Play();
+}
+
+void ADoor::ToggleActiveEnemies()
+{
+	for(AActor* OldA : OldActors)
+	{
+		OldA->SetActorTickEnabled(false);
+		
+	}
+	for(AActor* NewA : NewActors)
+	{
+		NewA->SetActorTickEnabled(true);
+	}
+		
+
 }
 
 

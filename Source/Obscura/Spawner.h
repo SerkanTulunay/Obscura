@@ -34,5 +34,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RandomWeight = 0.5f;
 
-
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//bool bHasBeenPassed = false;
 };

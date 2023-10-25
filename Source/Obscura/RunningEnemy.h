@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 #include "RunningEnemy.generated.h"
 
 UCLASS()
@@ -28,6 +29,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Attack();
 
+
 	void BecomeStunned();
 private:
 
@@ -45,6 +47,8 @@ private:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	bool bIsAttacking = false;
 	FVector SpawnPoint;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool bStartActive = false;
 	
 	
 	//Sounds
@@ -54,6 +58,7 @@ private:
 	USoundCue* AttackHitSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* DeathSound;
+
 
 
 };

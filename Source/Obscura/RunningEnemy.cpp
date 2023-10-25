@@ -6,11 +6,14 @@
 #include "MyCharacter.h"
 
 
+
 // Sets default values
 ARunningEnemy::ARunningEnemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+
 
 }
 
@@ -19,6 +22,9 @@ void ARunningEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	SpawnPoint = GetActorLocation();
+	if(!bStartActive)
+		SetActorTickEnabled(false);
+
 	
 }
 
@@ -58,6 +64,7 @@ void ARunningEnemy::Attack()
 		}
 	}
 }
+
 
 void ARunningEnemy::BecomeStunned()
 {
