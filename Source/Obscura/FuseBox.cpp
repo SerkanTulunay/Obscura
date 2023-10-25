@@ -43,16 +43,14 @@ void AFuseBox::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 {
 	if(AMyCharacter* Player = Cast<AMyCharacter>(OtherActor))
 	{
+		UE_LOG(LogTemp,Warning,TEXT("%i"),Player->TotalFuses);
 		if(Player->TotalFuses == TotalFuseToCollect)
 		{
 			Player->bHasKey = true;
 		}
-		/*else
+		else
 		{
-			for(int i = Player->TotalFuses; i == TotalFuseToCollect; i++)
-			{
-				UGameplayStatics::PlaySoundAtLocation(this,MissingFuseSound,GetActorLocation());
-			}
-		}*/
+			UGameplayStatics::PlaySoundAtLocation(this,MissingFuseSound,GetActorLocation());
+		}
 	}
 }
