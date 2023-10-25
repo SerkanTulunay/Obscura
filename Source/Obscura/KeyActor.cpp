@@ -25,6 +25,7 @@ void AKeyActor::BeginPlay()
 {
 	Super::BeginPlay();
 	KeyMesh->OnComponentBeginOverlap.AddDynamic(this,&AKeyActor::OverlapBegin);
+	AudioComp->SetActive(false);
 }
 
 // Called every frame
@@ -35,6 +36,7 @@ void AKeyActor::Tick(float DeltaTime)
 
 void AKeyActor::PlayHintSound()
 {
+	AudioComp->SetActive(true);
 	AudioComp->Play();
 }
 
@@ -44,6 +46,7 @@ void AKeyActor::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 	if(AMyCharacter* HitPlayer = Cast<AMyCharacter>(OtherActor))
 	{
 		UE_LOG(LogTemp,Warning,TEXT("Has KEY"));
+		AudioComp->SetActive(true);
 		HitPlayer->bHasKey = true;
 		UGameplayStatics::PlaySoundAtLocation(this,PickUpSound,GetActorLocation());
 		Destroy();

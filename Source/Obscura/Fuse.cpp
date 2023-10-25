@@ -23,6 +23,7 @@ void AFuse::BeginPlay()
 {
 	Super::BeginPlay();
 	FuseMesh->OnComponentBeginOverlap.AddDynamic(this,&AFuse::OverlapBegin);
+	AudioComp->SetActive(false);
 }
 
 // Called every frame
@@ -34,6 +35,7 @@ void AFuse::Tick(float DeltaTime)
 
 void AFuse::PlayHintSound()
 {
+	AudioComp->SetActive(true);
 	AudioComp->Play();
 }
 
@@ -42,7 +44,9 @@ void AFuse::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor
 {
 	if(AMyCharacter* Player = Cast<AMyCharacter>(OtherActor))
 	{
+		AudioComp->SetActive(true);
 		Player->TotalFuses++;
+		UGameplayStatics::PlaySoundAtLocation(this,PickUpSound,GetActorLocation());
 		UE_LOG(LogTemp,Warning,TEXT("FUSE PICKED"));
 		Destroy();
 	}
