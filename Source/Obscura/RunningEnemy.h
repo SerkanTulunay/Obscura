@@ -42,7 +42,9 @@ private:
 	float StunTimer;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* GetStunnedSound;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* AttackHitSound;
+	
 	FVector SpawnPoint;
 
 

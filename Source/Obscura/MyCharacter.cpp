@@ -239,6 +239,7 @@ void AMyCharacter::StunEnemy()
 	const float Radius = 500.f;
 
 
+	UGameplayStatics::PlaySoundAtLocation(this, StunActivation, GetActorLocation());
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
 	FHitResult EnemyHit;

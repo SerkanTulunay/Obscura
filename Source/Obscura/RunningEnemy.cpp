@@ -53,6 +53,7 @@ void ARunningEnemy::Attack()
 		{
 			Player->Respawn();
 			SetActorLocation(SpawnPoint);
+			UGameplayStatics::PlaySoundAtLocation(this, AttackHitSound, GetActorLocation());
 		}
 	}
 }
