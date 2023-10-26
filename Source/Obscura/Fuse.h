@@ -30,7 +30,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* FuseMesh;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta =(AllowPrivateAccess ="true"))
 	UAudioComponent* AudioComp;
 
 	UPROPERTY(EditAnywhere)

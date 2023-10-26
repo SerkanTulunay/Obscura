@@ -41,14 +41,14 @@ public:
 	int TotalFuses;
 
 	UPROPERTY(EditAnywhere)
-	float DefaultSpehereRadius = 200;
+	float DefaultSpehereRadius = 400;
 
 	float SphereRadius = DefaultSpehereRadius;
 
 	UPROPERTY(EditAnywhere)
-	float MaxRadius = 400;
+	float MaxRadius = 3000;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(AllowPrivateAccess = "true"))
 	float SphereGrowthRate = 80;
 	
 	//void TakeDamage();
@@ -76,7 +76,9 @@ private:
 
 	FVector SpawnPoint;
 
-	float StunCooldown = 0;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	float StunCooldown;
+	float StunTimer = 0;
 
 	bool StunAvailable = false;
 
@@ -101,6 +103,8 @@ private:
 	USoundCue* DoorBumpSound;
 	UPROPERTY(EditAnywhere,Category = "Sounds")
 	USoundCue* DoorUnlocking;
+	UPROPERTY(EditAnywhere,Category="Sounds")
+	USoundCue* DoorOpening;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* StunActivation;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")

@@ -47,8 +47,8 @@ void AMyCharacter::Tick(float DeltaTime)
 	if(GetActorRotation().Equals(TargetRotation))//Enables movement if rotation is finished
 		bIsMoving = false;
 
-	if(StunCooldown >= 0)
-		StunCooldown-=DeltaTime;
+	if(StunTimer >= 0)
+		StunTimer-=DeltaTime;
 	else if(!StunAvailable)
 	{
 		StunAvailable = true;
@@ -72,7 +72,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			}
 		}
 
-		if(SphereRadius > MaxRadius)
+		if(SphereRadius >= MaxRadius)
 		{
 			bSendPulse = false;
 			SphereRadius = DefaultSpehereRadius;
@@ -80,7 +80,7 @@ void AMyCharacter::Tick(float DeltaTime)
 		}
 		else
 		{
-			SphereRadius += SphereGrowthRate*DeltaTime;
+			SphereRadius = FMath::FInterpConstantTo(SphereRadius,MaxRadius,DeltaTime,SphereGrowthRate);
 		}
 	}
 
@@ -205,8 +205,9 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 			}
 			else
 			{
-				
+				UGameplayStatics::PlaySoundAtLocation(this,DoorOpening,GetActorLocation(),VolMult);
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 				Door->ToggleActiveEnemies();
 			}
 			
@@ -273,8 +274,9 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 			}
 			else
 			{
-				
+				UGameplayStatics::PlaySoundAtLocation(this,DoorOpening,GetActorLocation(),VolMult);
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
+				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 				Door->ToggleActiveEnemies();
 			}
 		}
@@ -287,7 +289,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 
 void AMyCharacter::StunEnemy()
 {
-	if (StunCooldown<=0)
+	if (StunTimer<=0)
 	{
 	StunAvailable = false;
 
@@ -306,7 +308,7 @@ void AMyCharacter::StunEnemy()
 			Enemy->BecomeStunned();
 		}
 	}
-	StunCooldown = 2,5;
+	StunTimer = StunCooldown;
 	}
 }
 

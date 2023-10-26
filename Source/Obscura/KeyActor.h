@@ -37,7 +37,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* KeyMesh;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta =(AllowPrivateAccess ="true"))
 	UAudioComponent* AudioComp;
 	UPROPERTY(EditAnywhere)
 	USoundBase* PickUpSound;
