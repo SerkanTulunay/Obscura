@@ -101,6 +101,8 @@ private:
 	USoundCue* DoorBumpSound;
 	UPROPERTY(EditAnywhere,Category = "Sounds")
 	USoundCue* DoorUnlocking;
+	UPROPERTY(EditAnywhere,Category="Sounds")
+	USoundCue* DoorOpening;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* StunActivation;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")

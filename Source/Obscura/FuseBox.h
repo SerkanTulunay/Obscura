@@ -42,6 +42,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	USoundBase* MissingFuseSound;
 
+	UPROPERTY(EditAnywhere)
+	USoundBase* AllFuseFoundSound;
+
 };
 
 

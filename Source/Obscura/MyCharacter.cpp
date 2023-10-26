@@ -205,7 +205,7 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 			}
 			else
 			{
-				
+				UGameplayStatics::PlaySoundAtLocation(this,DoorOpening,GetActorLocation(),VolMult);
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 				Door->ToggleActiveEnemies();
 			}
@@ -273,7 +273,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 			}
 			else
 			{
-				
+				UGameplayStatics::PlaySoundAtLocation(this,DoorOpening,GetActorLocation(),VolMult);
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 				Door->ToggleActiveEnemies();
 			}

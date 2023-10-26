@@ -47,6 +47,7 @@ void AFuseBox::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 		UE_LOG(LogTemp,Warning,TEXT("%i"),Player->TotalFuses);
 		if(Player->TotalFuses == TotalFuseToCollect)
 		{
+			UGameplayStatics::PlaySoundAtLocation(this,AllFuseFoundSound,GetActorLocation());
 			Player->bHasKey = true;
 		}
 		else
