@@ -72,7 +72,7 @@ void AMyCharacter::Tick(float DeltaTime)
 			}
 		}
 
-		if(SphereRadius > MaxRadius)
+		if(SphereRadius >= MaxRadius)
 		{
 			bSendPulse = false;
 			SphereRadius = DefaultSpehereRadius;
@@ -80,7 +80,7 @@ void AMyCharacter::Tick(float DeltaTime)
 		}
 		else
 		{
-			SphereRadius += SphereGrowthRate*DeltaTime;
+			SphereRadius = FMath::FInterpConstantTo(SphereRadius,MaxRadius,DeltaTime,SphereGrowthRate);
 		}
 	}
 
