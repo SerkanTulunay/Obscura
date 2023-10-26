@@ -41,14 +41,14 @@ public:
 	int TotalFuses;
 
 	UPROPERTY(EditAnywhere)
-	float DefaultSpehereRadius = 200;
+	float DefaultSpehereRadius = 400;
 
 	float SphereRadius = DefaultSpehereRadius;
 
 	UPROPERTY(EditAnywhere)
-	float MaxRadius = 400;
+	float MaxRadius = 3000;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta=(AllowPrivateAccess = "true"))
 	float SphereGrowthRate = 80;
 	
 	//void TakeDamage();

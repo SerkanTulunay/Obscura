@@ -50,7 +50,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* TeleportLocationMesh;
 private:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta =(AllowPrivateAccess ="true"))
 	UAudioComponent* AudioComp;
 
 	UPROPERTY(EditAnywhere)
