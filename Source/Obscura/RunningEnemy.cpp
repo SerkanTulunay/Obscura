@@ -60,7 +60,7 @@ void ARunningEnemy::Attack()
 			Player->Respawn();
 			Health = 2;
 			SetActorLocation(SpawnPoint);
-			UGameplayStatics::PlaySoundAtLocation(this, AttackHitSound, GetActorLocation());
+			UGameplayStatics::PlaySoundAtLocation(this, AttackHitSound, Player->GetActorLocation());
 		}
 	}
 }
@@ -72,7 +72,7 @@ void ARunningEnemy::BecomeStunned()
 	{
 		
 	bIsStunned = true;
-	StunTimer = 2;
+	StunTimer = StunDuration;
 	UGameplayStatics::PlaySoundAtLocation(this, GetStunnedSound, GetActorLocation());
 	if (Health>0)
 	{

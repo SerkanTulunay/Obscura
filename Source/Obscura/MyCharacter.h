@@ -76,7 +76,9 @@ private:
 
 	FVector SpawnPoint;
 
-	float StunCooldown = 0;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	float StunCooldown;
+	float StunTimer = 0;
 
 	bool StunAvailable = false;
 
