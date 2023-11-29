@@ -1,0 +1,65 @@
+[
+	{
+		"Name": "Character",
+		"Var1": 0.29999999999999999,
+		"Var2": 2.5,
+		"Var3": 1500,
+		"Var4": 0
+	},
+	{
+		"Name": "AttackingEnemy",
+		"Var1": 100,
+		"Var2": 0.59999999999999998,
+		"Var3": 100,
+		"Var4": 2
+	},
+	{
+		"Name": "PatrollingEnemy",
+		"Var1": 100,
+		"Var2": 0.19600000000000001,
+		"Var3": 100,
+		"Var4": 2
+	},
+	{
+		"Name": "RunningEnemy",
+		"Var1": 100,
+		"Var2": 0.5,
+		"Var3": 0,
+		"Var4": 0
+	},
+	{
+		"Name": "Fuse",
+		"Var1": 1.5,
+		"Var2": 0,
+		"Var3": 0,
+		"Var4": 0
+	},
+	{
+		"Name": "FuseBox",
+		"Var1": 1.5,
+		"Var2": 0,
+		"Var3": 0,
+		"Var4": 0
+	},
+	{
+		"Name": "Key",
+		"Var1": 1.5,
+		"Var2": 0,
+		"Var3": 0,
+		"Var4": 0
+	},
+	{
+		"Name": "Door",
+		"Var1": 1,
+		"Var2": 0,
+		"Var3": 0,
+		"Var4": 0
+	},
+	{
+		"Name": "Locker",
+		"Var1": 1.135829,
+		"Var2": 0,
+		"Var3": 0,
+		"Var4": 0
+	}
+]
