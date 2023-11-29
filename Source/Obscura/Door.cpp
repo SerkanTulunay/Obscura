@@ -26,7 +26,8 @@ ADoor::ADoor()
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
-	AudioComp->SetActive(false);
+	AudioComp->SetActive(true);
+	AudioComp->Play();
 }
 
 // Called every frame

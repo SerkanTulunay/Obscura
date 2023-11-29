@@ -35,6 +35,9 @@ public:
 	virtual void PlayHintSound() override;
 
 	void ToggleActiveEnemies();
+
+	UPROPERTY(EditAnywhere)
+	bool bLoadMainMenuDoor = false;
 	
 	//UFUNCTION()
 	//void OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

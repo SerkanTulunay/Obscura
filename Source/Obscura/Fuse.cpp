@@ -23,7 +23,8 @@ void AFuse::BeginPlay()
 {
 	Super::BeginPlay();
 	FuseMesh->OnComponentBeginOverlap.AddDynamic(this,&AFuse::OverlapBegin);
-	AudioComp->SetActive(false);
+	AudioComp->SetActive(true);
+	AudioComp->Play();
 }
 
 // Called every frame
@@ -35,8 +36,7 @@ void AFuse::Tick(float DeltaTime)
 
 void AFuse::PlayHintSound()
 {
-	AudioComp->SetActive(true);
-	AudioComp->Play();
+
 }
 
 void AFuse::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,

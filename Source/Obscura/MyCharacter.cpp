@@ -25,6 +25,7 @@ AMyCharacter::AMyCharacter()
 	Cam->SetRelativeLocation(FVector(0,0,40));
 
 	
+	
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +36,8 @@ void AMyCharacter::BeginPlay()
 	bIsHiding = false;
 	SpawnPoint = GetActorLocation();
 	
+	SavePath = FPaths::ProjectDir() + TEXT("Logs/PlayTestLog.json");
+	LogEvent("Started Playing");
 }
 
 // Called every frame
@@ -49,43 +52,13 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	if(StunTimer >= 0)
 		StunTimer-=DeltaTime;
+	if(StunTimer>StunCooldown)
+		StunTimer=StunCooldown;
 	else if(!StunAvailable)
 	{
 		StunAvailable = true;
 		UGameplayStatics::PlaySoundAtLocation(this, StunAvailableSound, GetActorLocation());
 	}
-
-	if(bSendPulse)
-	{
-		FCollisionShape ColSphere = FCollisionShape::MakeSphere(SphereRadius);
-		DrawDebugSphere(GetWorld(),GetActorLocation(),ColSphere.GetSphereRadius(),20,FColor::Purple,false,0.1f);
-		FHitResult OutHit;
-		bool bHit = GetWorld()->SweepSingleByChannel(OutHit,GetActorLocation(),GetActorLocation(),FQuat::Identity,ECC_GameTraceChannel4,ColSphere,QueryParams);
-
-		if(bHit)
-		{
-			IHintInterface* Interface = Cast<IHintInterface>(OutHit.GetActor());
-			if(Interface)
-			{
-				Interface->PlayHintSound();
-				QueryParams.AddIgnoredActor(OutHit.GetActor());
-			}
-		}
-
-		if(SphereRadius >= MaxRadius)
-		{
-			bSendPulse = false;
-			SphereRadius = DefaultSpehereRadius;
-			QueryParams.ClearIgnoredActors();
-		}
-		else
-		{
-			SphereRadius = FMath::FInterpConstantTo(SphereRadius,MaxRadius,DeltaTime,SphereGrowthRate);
-		}
-	}
-
-
-	
 }
 
 // Called to bind functionality to input
@@ -103,6 +76,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::Respawn()
 {
+	LogEvent("Player Died");
 	SetActorLocation(SpawnPoint);
 }
 
@@ -152,8 +126,6 @@ void AMyCharacter::StartPulse()
 	bSendPulse = true;
 }
 
-
-
 void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis if able to
 {
 	//Check for wall blocking path
@@ -197,6 +169,7 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 					bHasKey = false;
 					Door->ToggleActiveEnemies();
+					LogEvent("Went to next room");
 				}
 				else
 				{
@@ -209,6 +182,7 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 				Door->ToggleActiveEnemies();
+				LogEvent("Went to next room");
 			}
 			
 		}
@@ -266,6 +240,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 					SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 					bHasKey = false;
 					Door->ToggleActiveEnemies();
+					//LogEvent("Went to next room");
 				}
 				else
 				{
@@ -278,6 +253,7 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 				SetActorLocation(Door->TeleportLocationMesh->GetComponentLocation());
 				SpawnPoint  = Door->TeleportLocationMesh->GetComponentLocation();
 				Door->ToggleActiveEnemies();
+				LogEvent("Went to next room");
 			}
 		}
 		else
@@ -307,6 +283,7 @@ void AMyCharacter::StunEnemy()
 		{
 			Enemy->BecomeStunned();
 		}
+		LogEvent("Stunned Enemy");
 	}
 	StunTimer = StunCooldown;
 	}
@@ -321,5 +298,25 @@ void AMyCharacter::CameraYaw(float Axis) //Rotates player 90 degrees if able to
 		bIsMoving = true;
 	}
 
+}
+
+void AMyCharacter::LogEvent(const FString& EventName)
+{
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+
+	if (FFileHelper::LoadFileToString(ExistingLogData, *SavePath))
+	{
+		// Existing log data is loaded into ExistingLogData
+	}
+	
+	JsonObject->SetStringField(TEXT("time"), FDateTime::Now().ToString());
+	JsonObject->SetStringField(TEXT("Event"), EventName);
+	
+
+	TSharedRef<TJsonWriter<TCHAR>> JsonWriter = TJsonWriterFactory<>::Create(&JsonString);
+	FJsonSerializer::Serialize(JsonObject.ToSharedRef(), JsonWriter);
+
+	FString CombinedLogData = ExistingLogData + JsonString + TEXT("\n");
+	FFileHelper::SaveStringToFile(CombinedLogData, *SavePath);
 }
 

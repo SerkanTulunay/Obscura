@@ -7,6 +7,7 @@
 #include "Math/UnrealMathUtility.h"
 #include "Misc/App.h"
 #include "Sound/SoundCue.h"
+#include "JsonUtilities/Public/JsonUtilities.h"
 #include "RunningEnemy.h"
 #include "MyCharacter.generated.h"
 
@@ -61,6 +62,13 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UCameraComponent* Cam;
 
+	
+	FString JsonString;
+	FString SavePath;
+	FString ExistingLogData;
+	
+	int PlayerID = 0;
+	
 	FRotator TargetRotation;
 	
 	FHitResult HideSpotHit;
@@ -126,6 +134,8 @@ private:
 	void MoveVertical(float Axis);
 	UFUNCTION(BlueprintCallable)
 	void CameraYaw(float Axis);
+
+	void LogEvent(const FString& EventName);
 
 
 private:
