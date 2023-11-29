@@ -52,6 +52,8 @@ void AMyCharacter::Tick(float DeltaTime)
 
 	if(StunTimer >= 0)
 		StunTimer-=DeltaTime;
+	if(StunTimer>StunCooldown)
+		StunTimer=StunCooldown;
 	else if(!StunAvailable)
 	{
 		StunAvailable = true;
