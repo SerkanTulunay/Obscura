@@ -26,6 +26,7 @@ void AKeyActor::BeginPlay()
 	Super::BeginPlay();
 	KeyMesh->OnComponentBeginOverlap.AddDynamic(this,&AKeyActor::OverlapBegin);
 	AudioComp->SetActive(false);
+	AudioComp->Play();
 }
 
 // Called every frame
@@ -36,8 +37,6 @@ void AKeyActor::Tick(float DeltaTime)
 
 void AKeyActor::PlayHintSound()
 {
-	AudioComp->SetActive(true);
-	AudioComp->Play();
 }
 
 void AKeyActor::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
