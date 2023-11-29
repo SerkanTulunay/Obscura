@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ReadWriteParameters.generated.h"
+#include "GameFramework/GameUserSettings.h"
+#include "ObscuraSettings.generated.h"
 
-class FJsonObject;;
 /**
  * 
  */
 UCLASS()
-class OBSCURA_API UReadWriteParameters : public UBlueprintFunctionLibrary
+class OBSCURA_API UObscuraSettings : public UGameUserSettings
 {
 	GENERATED_BODY()
-public:
+	
 };
