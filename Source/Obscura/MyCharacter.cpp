@@ -141,6 +141,16 @@ void AMyCharacter::MoveHorizontal(float Axis) //Moves player 100cm in the x-axis
 	{
 		SetActorLocation(GetActorLocation()+GetActorRightVector()*Axis*200);
 		UGameplayStatics::PlaySoundAtLocation(this, StepSound, GetActorLocation());
+		//Sound for being next to wall
+		bool FrontBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorForwardVector()*200, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+		if(FrontBlocked)
+			UGameplayStatics::SpawnSoundAttached(WallScratch, GetRootComponent(), NAME_None, GetActorRightVector()*500, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false, 1.1, 1, 0, nullptr, nullptr, true);
+
+
+
+		bool BackBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorForwardVector()*-200, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+		if(BackBlocked)
+			UGameplayStatics::SpawnSoundAttached(WallScratch, GetRootComponent(), NAME_None, GetActorRightVector()*-500, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false, .6, 1, 0, nullptr, nullptr, true);
 	}
 	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
 	{
@@ -211,6 +221,17 @@ void AMyCharacter::MoveVertical(float Axis) //Moves player 100cm in the y-axis i
 		SetActorLocation(GetActorLocation()+GetActorForwardVector()*Axis*200);
 
 		UGameplayStatics::PlaySoundAtLocation(this, StepSound, GetActorLocation());
+
+		//Near wall Sound
+		bool RightBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorRightVector()*200, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+		if(RightBlocked)
+			UGameplayStatics::SpawnSoundAttached(WallScratch, GetRootComponent(), NAME_None, GetActorForwardVector()*-500, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false, .7, 1, 0, nullptr, nullptr, true);
+
+		bool LeftBlocked = GetWorld()->SweepSingleByChannel(hit, this->GetActorLocation(), this->GetActorLocation()+GetActorRightVector()*-200, FQuat::Identity, TraceChanel, FCollisionShape::MakeSphere(Radius), TraceParams);
+		if(LeftBlocked)
+			UGameplayStatics::SpawnSoundAttached(WallScratch, GetRootComponent(), NAME_None, GetActorForwardVector()*+500, FRotator::ZeroRotator, EAttachLocation::KeepRelativeOffset, false, .7, 1, 0, nullptr, nullptr, true);
+
+		
 	}
 	
 	if(MovementBlocked && abs(Axis)>0)//Player is blocked-> plays blocksound
