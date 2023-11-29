@@ -47,7 +47,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* FuseBoxOn;
-
 };
 
 
