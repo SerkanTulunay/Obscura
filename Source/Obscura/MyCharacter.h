@@ -118,6 +118,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	USoundCue* StunAvailableSound;
 	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
+	USoundCue* WallScratch;
+	UPROPERTY(EditDefaultsOnly, Category = "Sounds")
 	UAudioComponent* PlayerAudioComponent;
 	
 
