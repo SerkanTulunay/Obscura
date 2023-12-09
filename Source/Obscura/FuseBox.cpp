@@ -7,7 +7,7 @@
 AFuseBox::AFuseBox()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	FuseBoxMesh = CreateDefaultSubobject<UStaticMeshComponent>("FuseBoxMesh");
 	AudioComp = CreateDefaultSubobject<UAudioComponent>("HintAudio");
 	FuseBoxMesh->SetupAttachment(RootComponent);
@@ -18,12 +18,25 @@ void AFuseBox::BeginPlay()
 {
 	Super::BeginPlay();
 	FuseBoxMesh->OnComponentBeginOverlap.AddDynamic(this,&AFuseBox::OverlapBegin);
-	AudioComp->SetActive(true);
+	PlayerCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
 }
 // Called every frame
 void AFuseBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(PlayerCharacter)
+	{
+		if(PlayerCharacter->TotalFuses == TotalFuseToCollect)
+		{
+			AudioComp->SetActive(true);
+		}
+		else
+		{
+			AudioComp->SetActive(false);
+		}
+	}
+
 }
 void AFuseBox::PlayHintSound()
 {

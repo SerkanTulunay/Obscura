@@ -11,8 +11,8 @@ UCLASS()
 class OBSCURA_API AFuseBox : public AActor, public IHintInterface
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AFuseBox();
 
@@ -20,7 +20,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -47,8 +47,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* FuseBoxOn;
+
+	UPROPERTY(EditAnywhere)
+	class AMyCharacter* PlayerCharacter;
 };
-
-
-
-
