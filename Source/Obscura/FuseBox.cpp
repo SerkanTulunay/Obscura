@@ -56,9 +56,6 @@ void AFuseBox::OverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 			AudioComp->Sound = FuseBoxOn;
 			AudioComp->Play();
 		}
-		else
-		{
-			UGameplayStatics::PlaySoundAtLocation(this,MissingFuseSound,GetActorLocation());
-		}
+
 	}
 }
