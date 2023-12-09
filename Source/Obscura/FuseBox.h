@@ -47,9 +47,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* FuseBoxOn;
-
-	UPROPERTY(EditAnywhere)
-	class AMyCharacter* PlayerCharacter;
 };
 
 
