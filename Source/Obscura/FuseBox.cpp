@@ -19,6 +19,7 @@ void AFuseBox::BeginPlay()
 	Super::BeginPlay();
 	FuseBoxMesh->OnComponentBeginOverlap.AddDynamic(this,&AFuseBox::OverlapBegin);
 	PlayerCharacter = Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
+
 }
 // Called every frame
 void AFuseBox::Tick(float DeltaTime)
@@ -32,10 +33,10 @@ void AFuseBox::Tick(float DeltaTime)
 			AudioComp->SetActive(true);
 		}
 		else
-		{
 			AudioComp->SetActive(false);
-		}
+
 	}
+	PlayerCharacter =  Cast<AMyCharacter>(UGameplayStatics::GetPlayerCharacter(this,0));
 
 }
 void AFuseBox::PlayHintSound()
